@@ -1,0 +1,17 @@
+name: CustomText
+main: com.andyoctopus.customtext.CustomText
+version: 1.0
+author: AndyOctopus
+api-version: 1.8
+
+commands:
+  customtext:
+    description: 重载插件配置
+    usage: /customtext reload
+    aliases: [ctreload]
+    permission: customtext.reload
+
+permissions:
+  customtext.reload:
+    description: 允许重载插件配置
+    default: op

@@ -1,0 +1,21 @@
+commands:
+  test123:
+    permission: "aaa.bbb"
+    messages:
+      - "&6===== &eTest Command &6====="
+      - "&aThis is a protected command"
+      - "&cYou need aaa.bbb permission to use this"
+
+  limbo:
+    messages:
+    # No permission! Everyone can use it!
+      - "&bWelcome to the Limbo dimension!"
+      - "&7This is a mysterious place between worlds"
+      - "&eBe careful not to get lost!"
+
+  welcome:
+    permission: "greetings.use"
+    messages:
+      - "&d&lWelcome to our server!"
+      - "&7Today's special: &aFree cookies at spawn"
+      - "&bUse /help for assistance"
