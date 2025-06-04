@@ -28,6 +28,9 @@ Broadcasting server rules & announcements
 Creating interactive welcome systems
 Replacing hardcoded messages with config-driven content
 
+Setup Video:
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/IRjJIu2mFJ8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
 **CustomText v1.0 - 动态命令与消息管理插件**
 
 一款轻量级Spigot插件，允许管理员通过配置文件快速创建自定义命令，实时推送多行彩色消息。无需修改代码即可管理服务器公告、欢迎词或活动通知，支持热重载与精细化权限控制。
@@ -52,3 +55,6 @@ Replacing hardcoded messages with config-driven content
 服务器规则公告
 新玩家欢迎系统
 活动动态推送
+
+设置视频：
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/CPSlCT-4Meo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
