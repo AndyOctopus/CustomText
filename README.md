@@ -29,7 +29,7 @@ Creating interactive welcome systems
 Replacing hardcoded messages with config-driven content
 
 Setup Video:
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/IRjJIu2mFJ8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+https://youtu.be/IRjJIu2mFJ8
 
 **CustomText v1.0 - 动态命令与消息管理插件**
 
@@ -57,4 +57,4 @@ Setup Video:
 活动动态推送
 
 设置视频：
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/CPSlCT-4Meo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+https://youtu.be/CPSlCT-4Meo
