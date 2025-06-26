@@ -1,5 +1,7 @@
 package com.andyoctopus.customtext;
 
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -7,6 +9,7 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,24 +24,23 @@ public class CustomText extends JavaPlugin {
 
     private Map<String, CommandConfig> commands = new HashMap<>();
     private CommandMap commandMap;
-    private List<Command> dynamicCommands = new ArrayList<>(); // 存储动态命令
+    private List<Command> dynamicCommands = new ArrayList<>();
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         try {
-            // 获取服务器的命令映射
-            Field commandMapField = getServer().getClass().getDeclaredField("commandMap");
+            // 通过反射获取CommandMap (兼容1.21.4)
+            Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
             commandMapField.setAccessible(true);
-            commandMap = (CommandMap) commandMapField.get(getServer());
+            commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
         } catch (Exception e) {
             getLogger().severe("命令映射获取失败: " + e.getMessage());
         }
 
-        // 安全注册基础命令
         registerBaseCommand();
         reloadCommands();
-        getLogger().info("CustomText v1.0 enabled!");
+        getLogger().info("CustomText v1.0 enabled for 1.21.4 with PlaceholderAPI support!");
     }
 
     private void registerBaseCommand() {
@@ -46,21 +48,20 @@ public class CustomText extends JavaPlugin {
         if (cmd != null) {
             cmd.setExecutor(this);
         } else {
-            getLogger().warning("Can't get reguler command...");
+            getLogger().warning("Can't get regular command...");
             cmd = createCommand("customtext");
-            if (cmd != null) {
+            if (cmd != null && commandMap != null) {
                 cmd.setExecutor(this);
                 commandMap.register(getDescription().getName(), cmd);
             }
         }
     }
 
-    // 重载所有命令配置
     private void reloadCommands() {
-        unregisterDynamicCommands(); // 只卸载动态命令
+        unregisterDynamicCommands();
         commands.clear();
 
-        reloadConfig(); // 重载配置文件
+        reloadConfig();
         FileConfiguration config = getConfig();
 
         if (config.contains("commands")) {
@@ -68,25 +69,22 @@ public class CustomText extends JavaPlugin {
             for (String commandName : commandsSection.getKeys(false)) {
                 ConfigurationSection cmdSection = commandsSection.getConfigurationSection(commandName);
 
-                // 解析命令配置
                 CommandConfig cmdConfig = new CommandConfig();
                 cmdConfig.permission = cmdSection.getString("permission", null);
                 cmdConfig.messages = cmdSection.getStringList("messages");
                 commands.put(commandName.toLowerCase(), cmdConfig);
 
-                // 动态创建命令
                 PluginCommand cmd = createCommand(commandName);
-                if (cmd != null) {
+                if (cmd != null && commandMap != null) {
                     cmd.setExecutor(new TextCommandExecutor(this, commandName));
                     commandMap.register(getDescription().getName(), cmd);
-                    dynamicCommands.add(cmd); // 添加到动态命令列表
+                    dynamicCommands.add(cmd);
                     getLogger().info("Command registered: /" + commandName);
                 }
             }
         }
     }
 
-    // 卸载动态命令（不干扰基础命令）
     private void unregisterDynamicCommands() {
         if (commandMap == null) return;
 
@@ -95,7 +93,6 @@ public class CustomText extends JavaPlugin {
             knownCommandsField.setAccessible(true);
             Map<String, Command> knownCommands = (Map<String, Command>) knownCommandsField.get(commandMap);
 
-            // 只移除动态命令
             for (Command cmd : dynamicCommands) {
                 knownCommands.values().removeIf(c -> c == cmd);
             }
@@ -106,7 +103,6 @@ public class CustomText extends JavaPlugin {
         }
     }
 
-    // 反射创建命令对象
     private PluginCommand createCommand(String name) {
         try {
             Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
@@ -118,7 +114,6 @@ public class CustomText extends JavaPlugin {
         }
     }
 
-    // 处理/customtext命令
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("customtext")) {
@@ -138,7 +133,6 @@ public class CustomText extends JavaPlugin {
         return false;
     }
 
-    // 动态命令执行器
     public static class TextCommandExecutor implements org.bukkit.command.CommandExecutor {
         private final CustomText plugin;
         private final String commandName;
@@ -153,21 +147,25 @@ public class CustomText extends JavaPlugin {
             CommandConfig cmdConfig = plugin.commands.get(commandName);
             if (cmdConfig == null) return false;
 
-            // 权限检查
             if (cmdConfig.permission != null && !sender.hasPermission(cmdConfig.permission)) {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to use this command!");
                 return true;
             }
 
-            // 发送配置的消息
             for (String message : cmdConfig.messages) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+                String formatted = ChatColor.translateAlternateColorCodes('&', message);
+
+                // 添加PlaceholderAPI支持
+                if (sender instanceof Player && Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                    Player player = (Player) sender;
+                    formatted = PlaceholderAPI.setPlaceholders(player, formatted);
+                }
+                sender.sendMessage(formatted);
             }
             return true;
         }
     }
 
-    // 命令配置存储类
     private static class CommandConfig {
         String permission;
         List<String> messages = new ArrayList<>();
