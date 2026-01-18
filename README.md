@@ -28,9 +28,6 @@ Broadcasting server rules & announcements
 Creating interactive welcome systems
 Replacing hardcoded messages with config-driven content
 
-Setup Video:
-https://youtu.be/IRjJIu2mFJ8
-
 **CustomText v1.0 - 动态命令与消息管理插件**
 
 一款轻量级Spigot插件，允许管理员通过配置文件快速创建自定义命令，实时推送多行彩色消息。无需修改代码即可管理服务器公告、欢迎词或活动通知，支持热重载与精细化权限控制。
@@ -55,6 +52,3 @@ https://youtu.be/IRjJIu2mFJ8
 服务器规则公告
 新玩家欢迎系统
 活动动态推送
-
-设置视频：
-https://youtu.be/CPSlCT-4Meo
